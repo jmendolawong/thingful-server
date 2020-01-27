@@ -34,51 +34,6 @@ describe('Things Endpoints', function () {
         testReviews,
       )
     )
-
-    const protectedEndpoints = [
-      {
-        name: `GET /api/things/:thing_id`,
-        path: `/api/things/1`
-      },
-      {
-        name: `GET /api/things/1/review`,
-        path: `/api/things/1/review`
-      }
-    ]
-
-    protectedEndpoints.forEach(endpoint => {
-      describe(endpoint.name, () => {
-        it(`responds 401 'Missing Basic Token' when no basic token`, () => {
-          supertest(app)
-            .get(endpoint.path)
-            .expect(401, { error: 'Missing basic token' })
-        })
-
-        it(`responds 401 'Unauthorized request' with no creditionals`, () => {
-          const noCreds = { user_name: '', password: '' }
-          supertest(app)
-            .get(endpoint.path)
-            .set('Authorization', helpers.makeAuthHeader(noCreds))
-            .expect(401, { error: 'Unauthorized request' })
-        })
-
-        it(`responds 401 'Unauthorized request' with invalid user_name`, () => {
-          const badUser = { user_name: 'badUser', password: '' }
-          supertest(app)
-            .get(endpoint.path)
-            .set('Authorization', helpers.makeAuthHeader(badUser))
-            .expect(401, { error: 'Unauthorized request' })
-        })
-
-        it(`responds 401 'Unauthorized request' with invalid password`, () => {
-          const badPassword = { user_name: testUsers[0], password: 'badPass' }
-          supertest(app)
-            .get(endpoint.path)
-            .set('Authorization', helpers.makeAuthHeader(badPassword))
-            .expect(401, { error: 'Unauthorized request' })
-        })
-      })
-    })
   })
 
   describe(`GET /api/things`, () => {
